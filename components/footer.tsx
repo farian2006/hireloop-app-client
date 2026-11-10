@@ -99,12 +99,12 @@ export function Footer() {
                 href="#"
                 className="flex h-8 w-8 items-center justify-center rounded bg-gray-900 text-xs text-white transition-colors hover:bg-gray-800"
               >
-               <Image
-               src="/assests/socials/linkedin.png"
-               alt="LinkedIn Logo"
-               height={34}
-               width={34}
-               />
+                <Image
+                  src="/assests/socials/linkedin.png"
+                  alt="LinkedIn Logo"
+                  height={34}
+                  width={34}
+                />
               </Link>
             </div>
           </div>

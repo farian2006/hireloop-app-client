@@ -48,10 +48,16 @@ export function Navbar() {
               <div className="h-4 w-px bg-border"></div>
               <div className="flex items-center gap-4">
                 <Link
-                  href="#"
+                  href="/auth/sign-in"
                   className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Sign In
+                </Link>
+                <Link
+                  href="/auth/sign-up"
+                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Sign up
                 </Link>
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm transition-all hover:from-blue-700 hover:to-purple-700">
                   Get Started
@@ -92,11 +98,18 @@ export function Navbar() {
                 <div className="h-px bg-border"></div>
                 <div className="flex flex-col gap-3">
                   <Link
-                    href="#"
+                    href="/auth/sign-in"
                     onClick={() => setMobileOpen(false)}
                     className="rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                   >
                     Sign In
+                  </Link>
+                  <Link
+                    href="/auth/sign-up"
+                    onClick={() => setMobileOpen(false)}
+                    className="rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    Sign up
                   </Link>
                   <Button
                     className="mx-4 w-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm hover:from-blue-700 hover:to-purple-700"
