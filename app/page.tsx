@@ -1,7 +1,9 @@
-
+import { Banner } from "@/components/banner"
 
 export default function Page() {
   return (
-   <div></div>
+    <div className="relative">
+      <Banner />
+    </div>
   )
 }

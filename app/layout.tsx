@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Manrope } from "next/font/google"
 
 import "./globals.css"
 import { Navbar } from "@/components/navbar"
@@ -12,6 +12,8 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" })
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -24,8 +26,9 @@ export default function RootLayout({
       className={cn(
         "antialiased",
         fontMono.variable,
-        "font-sans",
-        geist.variable
+        geist.variable,
+        manrope.variable,
+        "font-sans"
       )}
     >
       <body>
