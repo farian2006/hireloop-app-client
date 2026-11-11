@@ -53,15 +53,11 @@ export function Navbar() {
                 >
                   Sign In
                 </Link>
-                <Link
-                  href="/auth/sign-up"
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Sign up
-                </Link>
+                <Link href="/auth/sign-up">
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm transition-all hover:from-blue-700 hover:to-purple-700">
                   Get Started
                 </Button>
+                </Link>
               </div>
             </div>
 
@@ -104,19 +100,14 @@ export function Navbar() {
                   >
                     Sign In
                   </Link>
-                  <Link
-                    href="/auth/sign-up"
-                    onClick={() => setMobileOpen(false)}
-                    className="rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    Sign up
-                  </Link>
+                  <Link href="/auth/sign-up">
                   <Button
-                    className="mx-4 w-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm hover:from-blue-700 hover:to-purple-700"
+                    className="mx-4 w-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm hover:from-blue-700 hover:to-purple-700 w-full"
                     onClick={() => setMobileOpen(false)}
                   >
                     Get Started
                   </Button>
+                  </Link>
                 </div>
               </div>
             </div>

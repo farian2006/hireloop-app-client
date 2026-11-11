@@ -4,6 +4,8 @@ import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
+import { Footer } from "@/components/footer"
+import { Toaster } from "@/components/ui/toast"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -35,6 +37,8 @@ export default function RootLayout({
         <ThemeProvider>
           <Navbar />
           {children}
+          <Footer/>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
