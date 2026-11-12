@@ -6,6 +6,18 @@ import { Menu, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { authClient, useSession } from "@/lib/auth-client"
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
+import { useRouter } from "next/navigation"
 
 const navLinks = [
   { label: "Browse Jobs", href: "/jobs" },
@@ -15,6 +27,20 @@ const navLinks = [
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { data: session } = useSession()
+  const user = session?.user
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          window.location.href = "/"
+          router.push("/")
+        },
+      },
+    })
+  }
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
@@ -46,19 +72,51 @@ export function Navbar() {
                 ))}
               </div>
               <div className="h-4 w-px bg-border"></div>
-              <div className="flex items-center gap-4">
-                <Link
-                  href="/auth/sign-in"
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Sign In
-                </Link>
-                <Link href="/auth/sign-up">
-                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm transition-all hover:from-blue-700 hover:to-purple-700">
-                    Get Started
-                  </Button>
-                </Link>
-              </div>
+              {session?.user ? (
+                <Popover>
+                  <PopoverTrigger
+                    render={
+                      <button
+                        type="button"
+                        className="rounded-full"
+                        aria-label="Open profile menu"
+                      />
+                    }
+                  >
+                    <Avatar>
+                      <AvatarImage src={user?.image || undefined} />
+                      <AvatarFallback>
+                        {user?.name?.charAt(0) || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverHeader>
+                      <PopoverTitle>{user?.name || "User"}</PopoverTitle>
+                      <PopoverDescription>My Profile</PopoverDescription>
+                    </PopoverHeader>
+                    <Button variant="destructive" onClick={handleSignOut}>
+                      Logout
+                    </Button>
+                  </PopoverContent>
+                </Popover>
+              ) : (
+                <>
+                  <div className="flex items-center gap-4">
+                    <Link
+                      href="/auth/sign-in"
+                      className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Sign In
+                    </Link>
+                    <Link href="/auth/sign-up">
+                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm transition-all hover:from-blue-700 hover:to-purple-700">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
 
             <Button
@@ -91,23 +149,53 @@ export function Navbar() {
                     </Link>
                   ))}
                 </div>
-                <div className="h-px bg-border"></div>
-                <div className="flex flex-col gap-3">
-                  <Link
-                    href="/auth/sign-in"
-                    onClick={() => setMobileOpen(false)}
-                    className="rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    Sign In
-                  </Link>
-                  <Link href="/auth/sign-up">
-                    <Button
-                      className="mx-4 w-auto w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm hover:from-blue-700 hover:to-purple-700"
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      Get Started
-                    </Button>
-                  </Link>
+                <div className="h-px w-full bg-border"></div>
+                <div className="flex justify-center">
+                  {session?.user ? (
+                    <Popover>
+                      <PopoverTrigger
+                        render={
+                          <button
+                            type="button"
+                            className="rounded-full"
+                            aria-label="Open profile menu"
+                          />
+                        }
+                      >
+                        <Avatar>
+                          <AvatarImage src={user?.image || undefined} />
+                          <AvatarFallback>
+                            {user?.name?.charAt(0) || "U"}
+                          </AvatarFallback>
+                        </Avatar>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <PopoverHeader>
+                          <PopoverTitle>{user?.name || "User"}</PopoverTitle>
+                          <PopoverDescription>My Profile</PopoverDescription>
+                        </PopoverHeader>
+                        <Button variant="destructive" onClick={handleSignOut}>
+                          Logout
+                        </Button>
+                      </PopoverContent>
+                    </Popover>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-4">
+                        <Link
+                          href="/auth/sign-in"
+                          className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                          Sign In
+                        </Link>
+                        <Link href="/auth/sign-up">
+                          <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm transition-all hover:from-blue-700 hover:to-purple-700">
+                            Get Started
+                          </Button>
+                        </Link>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

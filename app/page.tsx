@@ -7,7 +7,6 @@ export default function Page() {
     <div className="relative">
       <Banner />
       <Features />
-      <Footer />
     </div>
   )
 }
