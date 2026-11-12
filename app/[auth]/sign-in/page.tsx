@@ -6,7 +6,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Mail, Lock, Eye, EyeOff } from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
-
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -18,26 +18,48 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useToast } from "@/hooks/use-toast"
-import { signIn } from "@/lib/auth-client"
+import { authClient, signIn } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false)
-  const { toast } = useToast()
+  const router = useRouter()
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
-    const data = Object.fromEntries(formData)
-    console.log("Sign in form data:", data)
-    toast({
-      title: "Signed in",
-      description: "Welcome back to HireLoop",
+    const email = formData.get("email") as string
+    const password = formData.get("password") as string
+
+    const { error } = await authClient.signIn.email({
+      email,
+      password,
+      callbackURL: "/",
     })
+
+    if (error) {
+      toast.error("Sign In failed", {
+        description: error.message ?? "Something went wrong. Please try again.",
+      })
+      return
+    }
+    toast.success("Sign In Successful", {
+      description: "Welcome To HireLoop",
+    })
+    router.push("/")
   }
 
   const handleGoogleSignIn = async () => {
-    await signIn.social({ provider: "google", callbackURL: "/" })
+    const { error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    })
+
+    if (error) {
+      toast.error("Sign In failed", {
+        description: error.message ?? "Something went wrong. Please try again.",
+      })
+    }
   }
 
   return (
@@ -132,7 +154,12 @@ export default function SignInPage() {
               Or
             </p>
             <div>
-              <Button variant="outline" type="button" onClick={handleGoogleSignIn} className="w-full">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={handleGoogleSignIn}
+                className="w-full"
+              >
                 <FcGoogle className="size-5" />
                 Continue with Google
               </Button>

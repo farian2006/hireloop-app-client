@@ -58,6 +58,18 @@ export default function SignUpPage() {
     })
     router.push("/")
   }
+  const handleGoogleSignIn = async () => {
+    const { error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    })
+
+    if (error) {
+      toast.error("Sign In failed", {
+        description: error.message ?? "Something went wrong. Please try again.",
+      })
+    }
+  }
 
   return (
     <div className="mt-6 flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
@@ -187,7 +199,12 @@ export default function SignUpPage() {
               Or
             </p>
             <div>
-              <Button variant="outline" type="button" className="w-full">
+              <Button
+                variant="outline"
+                type="button"
+                className="w-full"
+                onClick={handleGoogleSignIn}
+              >
                 <FcGoogle className="size-5" />
                 Continue with Google
               </Button>
