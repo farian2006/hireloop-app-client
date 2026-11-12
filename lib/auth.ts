@@ -14,11 +14,19 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  socialProviders:{
-    google:{
-      clientId : process.env.GOOGLE_CLINET_ID as string,
-      clientSecret : process.env.GOOGLE_CLIENT_SECRET as string,
-    }
-  }
+  user: {
+    additionalFields: {
+      role: {
+        type: ["seeker", "recruiter", "admin"],
+        input: true,
+        defaultValue:"seeker",
+      },
+    },
   },
-)
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLINET_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+  },
+})

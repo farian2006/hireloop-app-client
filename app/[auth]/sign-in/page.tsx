@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { authClient, signIn } from "@/lib/auth-client"
+import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
 
 export default function SignInPage() {
@@ -63,7 +63,10 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="mt-6 flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
+    <div className="relative mt-6 flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-blue-500/20 via-purple-500/10 to-transparent blur-[128px] sm:h-[800px] sm:w-[800px]" />
+      </div>
       <Card className="w-full max-w-lg shadow-lg">
         <CardHeader className="space-y-3 px-8 pt-8 text-center">
           <div className="flex justify-center">

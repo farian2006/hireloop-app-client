@@ -2,7 +2,16 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Mail, User, Lock, LockKeyhole, Eye, EyeOff } from "lucide-react"
+import {
+  Briefcase,
+  Mail,
+  Shield,
+  User,
+  Lock,
+  LockKeyhole,
+  Eye,
+  EyeOff,
+} from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
 import { toast } from "sonner"
 
@@ -19,12 +28,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { authClient } from "@/lib/auth-client"
+import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 
 export default function SignUpPage() {
   const router = useRouter()
 
   const [showPassword, setShowPassword] = useState(false)
+  const [role, setRole] = useState<"seeker" | "recruiter" | "admin">("seeker")
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -44,8 +55,9 @@ export default function SignUpPage() {
       name,
       email,
       password,
+      role,
       callbackURL: "/",
-    })
+    } as Parameters<typeof authClient.signUp.email>[0] & { role: string })
 
     if (error) {
       toast.error("Sign up failed", {
@@ -72,7 +84,10 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="mt-6 flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
+    <div className="relative mt-6 flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-blue-500/20 via-purple-500/10 to-transparent blur-[128px] sm:h-[800px] sm:w-[800px]" />
+      </div>
       <Card className="w-full max-w-lg shadow-lg">
         <CardHeader className="space-y-3 px-8 pt-8 text-center">
           <div className="flex justify-center">
@@ -189,6 +204,50 @@ export default function SignUpPage() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="role" className="text-sm font-medium">
+                Role
+              </Label>
+              <div className="grid grid-cols-3 gap-2">
+                {(
+                  [
+                    {
+                      value: "seeker",
+                      label: "Job Seeker",
+                      icon: <User className="h-4 w-4" />,
+                    },
+                    {
+                      value: "recruiter",
+                      label: "Recruiter",
+                      icon: <Briefcase className="h-4 w-4" />,
+                    },
+                    {
+                      value: "admin",
+                      label: "Admin",
+                      icon: <Shield className="h-4 w-4" />,
+                    },
+                  ] as const
+                ).map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={role === option.value}
+                    onClick={() => setRole(option.value)}
+                    className={cn(
+                      "flex h-12 items-center justify-center gap-2 rounded-lg border text-sm font-medium transition-all",
+                      role === option.value
+                        ? "border-blue-600 bg-blue-600 text-white shadow-sm"
+                        : "border-input bg-background text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                    )}
+                  >
+                    {option.icon}
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <Button
               type="submit"
               className="h-12 w-full border-0 bg-gradient-to-r from-blue-600 via-sky-500 to-orange-500 text-base font-semibold text-white transition-opacity hover:opacity-90"
@@ -209,6 +268,10 @@ export default function SignUpPage() {
                 Continue with Google
               </Button>
             </div>
+            <p className="mx-auto mb-3 max-w-xs text-center text-xs leading-relaxed text-muted-foreground">
+              Signing in with Google creates a Job Seeker account. To register
+              as a recruiter, use email sign-up.
+            </p>
           </form>
         </CardContent>
 

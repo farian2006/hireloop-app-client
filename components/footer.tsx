@@ -45,12 +45,12 @@ export function Footer() {
           </p>
 
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href='/auth/sign-up'>
-            <button className="min-w-[180px] rounded-xl bg-white px-8 py-3 text-sm font-medium text-black transition-colors hover:bg-gray-100">
-              Create a free account
-            </button>
+            <Link href="/auth/sign-up">
+              <button className="pointer-none: min-w-[180px] cursor-pointer rounded-xl bg-white px-8 py-3 text-sm font-medium text-black transition-colors hover:bg-gray-100">
+                Create a free account
+              </button>
             </Link>
-            <button className="min-w-[150px] rounded-xl bg-gray-900 px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800">
+            <button className="min-w-[150px] cursor-pointer rounded-xl bg-gray-900 px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800">
               View pricing
             </button>
           </div>

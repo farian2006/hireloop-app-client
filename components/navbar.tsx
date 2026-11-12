@@ -54,9 +54,9 @@ export function Navbar() {
                   Sign In
                 </Link>
                 <Link href="/auth/sign-up">
-                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm transition-all hover:from-blue-700 hover:to-purple-700">
-                  Get Started
-                </Button>
+                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm transition-all hover:from-blue-700 hover:to-purple-700">
+                    Get Started
+                  </Button>
                 </Link>
               </div>
             </div>
@@ -101,12 +101,12 @@ export function Navbar() {
                     Sign In
                   </Link>
                   <Link href="/auth/sign-up">
-                  <Button
-                    className="mx-4 w-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm hover:from-blue-700 hover:to-purple-700 w-full"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    Get Started
-                  </Button>
+                    <Button
+                      className="mx-4 w-auto w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm hover:from-blue-700 hover:to-purple-700"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      Get Started
+                    </Button>
                   </Link>
                 </div>
               </div>
