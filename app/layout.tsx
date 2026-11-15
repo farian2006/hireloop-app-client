@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono, Manrope } from "next/font/google"
 
 import "./globals.css"
-import { Navbar } from "@/components/navbar"
+import { NavbarWrapper } from "@/components/navbar-wrapper"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { Footer } from "@/components/footer"
@@ -35,7 +35,7 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          {/* <Navbar /> */}
+          <NavbarWrapper />
           {children}
           <Footer />
           <Toaster />
