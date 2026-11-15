@@ -1,18 +1,17 @@
-import React from 'react';
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { DashBoardSidebar } from '@/app/components/DashBoardSideBar';
-
+import React from "react"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/sidebar"
+import { DashBoardSidebar } from "@/app/components/DashBoardSideBar"
 
 const Dashboardlayout = ({ children }: { children: React.ReactNode }) => {
-   return (
+  return (
     <SidebarProvider>
       <DashBoardSidebar />
-      <main>
-        <SidebarTrigger />
-        {children}
-      </main>
+      <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
   )
-};
+}
 
-export default Dashboardlayout;
+export default Dashboardlayout
