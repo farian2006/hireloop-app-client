@@ -24,17 +24,9 @@ import {
   FieldTitle,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Select, SelectGroup } from "@/components/ui/select"
-import {
-  SelectContent,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { createJob } from "@/lib/actions/jobs"
 
 const formSchema = z.object({
   jobTitle: z.string().min(1, "Job title is required"),
@@ -109,9 +101,17 @@ export default function NewJobPage() {
   const jobType = watch("jobType")
   const remoteAllowed = watch("remoteAllowed")
 
-  const onSubmit = (data: FormData) => {
-    console.log("SUBMITTED:", data)
+  const onSubmit = async (data: FormData) => {
     setFormData(data)
+    try {
+      const result = await createJob(data)
+      console.log("2. job created", result)
+    } catch (error) {
+      console.error("3. createJob failed:", error)
+    }
+  }
+  const onError = (errors: unknown) => {
+    console.log("VALIDATION ERRORS:", errors)
   }
 
   return (
@@ -139,10 +139,11 @@ export default function NewJobPage() {
       </div>
 
       <main className="flex w-full flex-1 items-center justify-center px-4 py-8 md:py-12">
-        <form 
-        id="job-form"
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-2xl space-y-8">
+        <form
+          id="job-form"
+          onSubmit={handleSubmit(onSubmit,onError)}
+          className="w-full max-w-2xl space-y-8"
+        >
           <Card className="border-border dark:border-input/50">
             <CardHeader>
               <div className="flex items-center gap-2">
@@ -155,7 +156,6 @@ export default function NewJobPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Job Title */}
               <Field>
                 <FieldLabel>
                   <FieldTitle>Job Title *</FieldTitle>
@@ -170,7 +170,6 @@ export default function NewJobPage() {
               </Field>
 
               <FieldGroup>
-                {/* Company Name */}
                 <Field>
                   <FieldLabel>
                     <FieldTitle>Company Name *</FieldTitle>
@@ -183,8 +182,6 @@ export default function NewJobPage() {
                     <FieldError>{errors.companyName?.message}</FieldError>
                   </FieldContent>
                 </Field>
-
-                {/* Job Category */}
                 <Field>
                   <FieldLabel>
                     <FieldTitle>Job Category *</FieldTitle>
@@ -211,8 +208,6 @@ export default function NewJobPage() {
                   </FieldContent>
                 </Field>
               </FieldGroup>
-
-              {/* Job Type */}
               <Field>
                 <FieldLabel>
                   <FieldTitle>Job Type *</FieldTitle>
