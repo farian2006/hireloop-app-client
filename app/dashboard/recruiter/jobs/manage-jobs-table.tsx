@@ -3,23 +3,13 @@
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import {
-  Briefcase,
   Building2,
-  Calculator,
-  Code,
   Ellipsis,
   FolderOpen,
-  Headphones,
   LayoutList,
-  type LucideIcon,
-  Megaphone,
-  Palette,
   Pencil,
   Plus,
-  Settings,
-  Target,
   Trash2,
-  TrendingUp,
   Users,
 } from "lucide-react"
 
@@ -47,70 +37,8 @@ import {
   type JobPost,
   type RawJob,
 } from "@/lib/types/jobs"
+import { categoryStyles, jobTypeLabels } from "@/lib/constants/jobs"
 import { DeleteJobDialogue } from "@/app/components/DeleteJobDialogue"
-
-const jobTypes: Record<JobType, string> = {
-  "full-time": "Full-time",
-  "part-time": "Part-time",
-  contract: "Contract",
-  internship: "Internship",
-}
-
-const categoryStyles: Record<
-  string,
-  { label: string; icon: LucideIcon; className: string }
-> = {
-  "engineering-tech": {
-    label: "Engineering",
-    icon: Code,
-    className: "bg-[#5b4cf5]/15 text-[#8f86ff]",
-  },
-  design: {
-    label: "Design",
-    icon: Palette,
-    className: "bg-orange-500/15 text-orange-400",
-  },
-  marketing: {
-    label: "Marketing",
-    icon: Megaphone,
-    className: "bg-pink-500/15 text-pink-400",
-  },
-  sales: {
-    label: "Sales",
-    icon: TrendingUp,
-    className: "bg-emerald-500/15 text-emerald-400",
-  },
-  product: {
-    label: "Product",
-    icon: Target,
-    className: "bg-violet-500/15 text-violet-400",
-  },
-  operations: {
-    label: "Operations",
-    icon: Settings,
-    className: "bg-sky-500/15 text-sky-400",
-  },
-  "customer-success": {
-    label: "Customer Success",
-    icon: Headphones,
-    className: "bg-amber-500/15 text-amber-400",
-  },
-  hr: {
-    label: "Human Resources",
-    icon: Users,
-    className: "bg-rose-500/15 text-rose-400",
-  },
-  finance: {
-    label: "Finance",
-    icon: Calculator,
-    className: "bg-teal-500/15 text-teal-400",
-  },
-  other: {
-    label: "Other",
-    icon: Briefcase,
-    className: "bg-muted text-muted-foreground",
-  },
-}
 
 const DAY_MS = 86_400_000
 
@@ -326,7 +254,8 @@ const ManageJobsTable = ({ jobs, loadError }: ManageJobsTableProps) => {
                         variant="outline"
                         className="rounded-md border-border px-2 py-0.5 text-xs font-normal text-muted-foreground dark:border-input/50"
                       >
-                        {(job.jobType && jobTypes[job.jobType as JobType]) ||
+                        {(job.jobType &&
+                          jobTypeLabels[job.jobType as JobType]) ||
                           "—"}
                       </Badge>
                     </TableCell>

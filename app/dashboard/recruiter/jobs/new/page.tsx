@@ -3,8 +3,14 @@
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import { cn } from "@/lib/utils"
+import {
+  frequencyOptions,
+  jobCategoryOptions,
+  jobFormSchema,
+  jobTypeOptions,
+  type JobFormData,
+} from "@/lib/constants/jobs"
 import { ArrowRight } from "lucide-react"
 import { toast } from "@/components/ui/toast"
 import { Button } from "@/components/ui/button"
@@ -29,51 +35,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { createJob } from "@/lib/actions/jobs"
 import { useRouter } from "next/navigation"
 
-const formSchema = z.object({
-  jobTitle: z.string().min(1, "Job title is required"),
-  companyName: z.string().min(1, "Company name is required"),
-  jobCategory: z.string().min(1, "Job category is required"),
-  jobType: z.string().min(1, "Job type is required"),
-  remoteAllowed: z.boolean().optional(),
-  jobLocation: z.string().min(1, "Job location is required"),
-  applicationDeadline: z.string().min(1, "Application deadline is required"),
-  minSalary: z.string().optional(),
-  maxSalary: z.string().optional(),
-  frequency: z.string().optional(),
-  keyResponsibilities: z.string().optional(),
-  qualifications: z.string().optional(),
-})
-
-type FormData = z.infer<typeof formSchema>
-
-const jobTypes = [
-  { value: "full-time", label: "Full-time" },
-  { value: "part-time", label: "Part-time" },
-  { value: "contract", label: "Contract" },
-  { value: "internship", label: "Internship" },
-]
-
-const jobCategories = [
-  { value: "engineering-tech", label: "Engineering & Tech" },
-  { value: "design", label: "Design" },
-  { value: "marketing", label: "Marketing" },
-  { value: "sales", label: "Sales" },
-  { value: "product", label: "Product" },
-  { value: "operations", label: "Operations" },
-  { value: "customer-success", label: "Customer Success" },
-  { value: "hr", label: "Human Resources" },
-  { value: "finance", label: "Finance" },
-  { value: "other", label: "Other" },
-]
-
-const frequencies = [
-  { value: "hour", label: "per hour" },
-  { value: "year", label: "per year" },
-  { value: "month", label: "per month" },
-]
-
 export default function NewJobPage() {
-  const [formData, setFormData] = useState<FormData | null>(null)
+  const [formData, setFormData] = useState<JobFormData | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const router = useRouter();
   const {
@@ -82,8 +45,8 @@ export default function NewJobPage() {
     watch,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  } = useForm<JobFormData>({
+    resolver: zodResolver(jobFormSchema),
     defaultValues: {
       jobTitle: "",
       companyName: "",
@@ -103,7 +66,7 @@ export default function NewJobPage() {
   const jobType = watch("jobType")
   const remoteAllowed = watch("remoteAllowed")
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: JobFormData) => {
     setFormData(data)
     setSubmitError(null)
     try {
@@ -225,7 +188,7 @@ export default function NewJobPage() {
                       <option value="" disabled className="bg-background">
                         Select a category
                       </option>
-                      {jobCategories.map((cat) => (
+                      {jobCategoryOptions.map((cat) => (
                         <option
                           key={cat.value}
                           value={cat.value}
@@ -245,7 +208,7 @@ export default function NewJobPage() {
                 </FieldLabel>
                 <FieldContent>
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    {jobTypes.map((jt) => {
+                    {jobTypeOptions.map((jt) => {
                       const isChecked = jobType === jt.value
                       return (
                         <button
@@ -366,7 +329,7 @@ export default function NewJobPage() {
                       <option value="" className="bg-background">
                         Select frequency
                       </option>
-                      {frequencies.map((freq) => (
+                      {frequencyOptions.map((freq) => (
                         <option
                           key={freq.value}
                           value={freq.value}
