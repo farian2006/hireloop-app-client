@@ -1,26 +1,6 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000"
 
-/**
- * Raw job document as returned by the HirePulse API
- * (a MongoDB document created by the "Post a New Job" form).
- */
-export type RawJob = {
-  _id: string
-  jobTitle?: string
-  companyName?: string
-  jobCategory?: string
-  jobType?: string
-  remoteAllowed?: boolean
-  jobLocation?: string
-  applicationDeadline?: string
-  minSalary?: string
-  maxSalary?: string
-  frequency?: string
-  keyResponsibilities?: string
-  qualifications?: string
-  applicants?: number
-  postedDaysAgo?: number
-}
+import type { RawJob } from "@/lib/types/jobs"
 
 export const getJobs = async (): Promise<RawJob[]> => {
   const res = await fetch(`${BASE_URL}/jobs`, {

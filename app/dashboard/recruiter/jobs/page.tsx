@@ -1,4 +1,5 @@
-import { getJobs, type RawJob } from "@/lib/api/jobs"
+import { getJobs } from "@/lib/api/jobs"
+import type { RawJob } from "@/lib/types/jobs"
 
 import ManageJobsTable from "./manage-jobs-table"
 

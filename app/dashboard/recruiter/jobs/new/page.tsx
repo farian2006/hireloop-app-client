@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { cn } from "@/lib/utils"
 import { ArrowRight } from "lucide-react"
-
+import { toast } from "@/components/ui/toast"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { createJob } from "@/lib/actions/jobs"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
   jobTitle: z.string().min(1, "Job title is required"),
@@ -74,7 +75,7 @@ const frequencies = [
 export default function NewJobPage() {
   const [formData, setFormData] = useState<FormData | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
-
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -107,6 +108,11 @@ export default function NewJobPage() {
     setSubmitError(null)
     try {
       await createJob(data)
+      toast.add({
+        title: "Post Published Successfully",
+        description: "",
+      })
+      router.push('/dashboard/recruiter/jobs')
     } catch (error) {
       console.error("3. createJob failed:", error)
       setSubmitError(
@@ -114,6 +120,9 @@ export default function NewJobPage() {
           ? error.message
           : "Something went wrong while publishing the job."
       )
+      toast.add({
+        title:"Something went wrong while publishing the job."
+      })
     }
   }
   const onError = (errors: unknown) => {

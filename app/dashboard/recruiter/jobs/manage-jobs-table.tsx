@@ -42,26 +42,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import type { RawJob } from "@/lib/api/jobs"
+import {
+  type JobType,
+  type JobPost,
+  type RawJob,
+} from "@/lib/types/jobs"
 import { DeleteJobDialogue } from "@/app/components/DeleteJobDialogue"
-
-type JobType = "full-time" | "part-time" | "contract" | "internship"
-
-export type JobPost = {
-  _id: string
-  jobTitle: string
-  jobCategory: string
-  companyName: string
-  jobLocation: string
-  remoteAllowed: boolean
-  jobType: string
-  minSalary: string
-  maxSalary: string
-  frequency: string
-  applicationDeadline: string
-  applicants: number
-  postedDaysAgo: number
-}
 
 const jobTypes: Record<JobType, string> = {
   "full-time": "Full-time",
