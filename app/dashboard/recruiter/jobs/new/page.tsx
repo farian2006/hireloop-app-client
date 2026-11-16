@@ -106,7 +106,7 @@ export default function NewJobPage() {
     setFormData(data)
     setSubmitError(null)
     try {
-      const result = await createJob(data)
+      await createJob(data)
     } catch (error) {
       console.error("3. createJob failed:", error)
       setSubmitError(
@@ -326,7 +326,7 @@ export default function NewJobPage() {
                   <FieldContent>
                     <Input
                       type="number"
-                      placeholder="€ 25"
+                      placeholder="$ 25"
                       {...register("minSalary")}
                     />
                   </FieldContent>
@@ -339,7 +339,7 @@ export default function NewJobPage() {
                   <FieldContent>
                     <Input
                       type="number"
-                      placeholder="€ 40"
+                      placeholder="$ 40"
                       {...register("maxSalary")}
                     />
                   </FieldContent>

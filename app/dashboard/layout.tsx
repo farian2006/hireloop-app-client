@@ -1,8 +1,5 @@
 import React from "react"
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { DashBoardSidebar } from "@/app/components/DashBoardSideBar"
 
 const Dashboardlayout = ({ children }: { children: React.ReactNode }) => {

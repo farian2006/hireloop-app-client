@@ -29,7 +29,10 @@ export function Navbar() {
     { label: "Browse Jobs", href: "/jobs" },
     { label: "Company", href: "/company" },
     { label: "Pricing", href: "/pricing" },
-    { label: "Dashboard", href: `/dashboard/${session?.user.role || "seeker"}` },
+    {
+      label: "Dashboard",
+      href: `/dashboard/${session?.user.role || "seeker"}`,
+    },
   ]
 
   const handleSignOut = async () => {
