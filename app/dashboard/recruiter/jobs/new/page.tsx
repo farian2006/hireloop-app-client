@@ -73,13 +73,14 @@ const frequencies = [
 
 export default function NewJobPage() {
   const [formData, setFormData] = useState<FormData | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -103,11 +104,16 @@ export default function NewJobPage() {
 
   const onSubmit = async (data: FormData) => {
     setFormData(data)
+    setSubmitError(null)
     try {
       const result = await createJob(data)
-      console.log("2. job created", result)
     } catch (error) {
       console.error("3. createJob failed:", error)
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while publishing the job."
+      )
     }
   }
   const onError = (errors: unknown) => {
@@ -130,10 +136,18 @@ export default function NewJobPage() {
           <Button
             type="submit"
             form="job-form"
-            className="w-full shrink-0 gap-2 rounded-xl bg-[#5b4cf5] px-5 text-white shadow-lg shadow-indigo-500/40 hover:bg-[#4f40e6] hover:shadow-indigo-500/60 sm:w-auto"
+            disabled={isSubmitting}
+            className="w-full shrink-0 gap-2 rounded-xl bg-[#5b4cf5] px-5 text-white shadow-lg shadow-indigo-500/40 hover:bg-[#4f40e6] hover:shadow-indigo-500/60 disabled:opacity-60 sm:w-auto"
           >
-            Publish Job
-            <ArrowRight className="size-4" />
+            {isSubmitting ? "Publishing..." : "Publish Job"}
+            {isSubmitting ? (
+              <span
+                aria-hidden="true"
+                className="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+              />
+            ) : (
+              <ArrowRight className="size-4" />
+            )}
           </Button>
         </div>
       </div>
@@ -141,9 +155,17 @@ export default function NewJobPage() {
       <main className="flex w-full flex-1 items-center justify-center px-4 py-8 md:py-12">
         <form
           id="job-form"
-          onSubmit={handleSubmit(onSubmit,onError)}
+          onSubmit={handleSubmit(onSubmit, onError)}
           className="w-full max-w-2xl space-y-8"
         >
+          {submitError && (
+            <div
+              role="alert"
+              className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
+            >
+              Failed to publish job: {submitError}
+            </div>
+          )}
           <Card className="border-border dark:border-input/50">
             <CardHeader>
               <div className="flex items-center gap-2">
@@ -392,17 +414,6 @@ export default function NewJobPage() {
               </Field>
             </CardContent>
           </Card>
-
-          {formData && (
-            <div className="mb-4 rounded-lg border border-border bg-muted/50 p-4">
-              <h3 className="mb-2 text-sm font-semibold text-foreground">
-                Form Data Collected:
-              </h3>
-              <pre className="overflow-x-auto text-xs whitespace-pre-wrap text-muted-foreground">
-                {JSON.stringify(formData, null, 2)}
-              </pre>
-            </div>
-          )}
         </form>
       </main>
     </div>
