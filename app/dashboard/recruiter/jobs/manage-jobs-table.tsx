@@ -43,11 +43,12 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { RawJob } from "@/lib/api/jobs"
+import { DeleteJobDialogue } from "@/app/components/DeleteJobDialogue"
 
 type JobType = "full-time" | "part-time" | "contract" | "internship"
 
-type JobPost = {
-  id: string
+export type JobPost = {
+  _id: string
   jobTitle: string
   jobCategory: string
   companyName: string
@@ -141,7 +142,7 @@ const mapApiJob = (doc: RawJob): JobPost => {
     : Math.max(0, Math.floor((Date.now() - createdAtMs) / DAY_MS))
 
   return {
-    id: doc._id,
+    _id: doc._id,
     jobTitle: doc.jobTitle?.trim() || "Untitled role",
     jobCategory: doc.jobCategory ?? "other",
     companyName: doc.companyName?.trim() || "—",
@@ -297,7 +298,7 @@ const ManageJobsTable = ({ jobs, loadError }: ManageJobsTableProps) => {
 
                 return (
                   <TableRow
-                    key={job.id}
+                    key={job._id}
                     className="border-border dark:border-input/50"
                   >
                     <TableCell className="px-5">
@@ -397,14 +398,7 @@ const ManageJobsTable = ({ jobs, loadError }: ManageJobsTableProps) => {
                           <Pencil className="size-3.5" />
                           Update
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          aria-label={`Delete ${job.jobTitle}`}
-                          className="text-muted-foreground hover:text-destructive"
-                        >
-                          <Trash2 className="size-4" />
-                        </Button>
+                       <DeleteJobDialogue job={job}/>
                         <DropdownMenu>
                           <DropdownMenuTrigger
                             render={
