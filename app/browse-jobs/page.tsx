@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { getJobs } from "@/lib/api/jobs"
 import type { RawJob } from "@/lib/types/jobs"
-import { MoreHorizontal } from "lucide-react"
+import { FaArrowAltCircleLeft, FaArrowCircleRight } from "react-icons/fa"
 import { SearchBar } from "@/components/browse-jobs/SearchBar"
 import { FilterPanel } from "@/components/browse-jobs/FilterPanel"
 import { JobCard } from "@/components/browse-jobs/JobCard"
@@ -11,55 +11,99 @@ import { JobCard } from "@/components/browse-jobs/JobCard"
 export default function BrowseJobsPage() {
   const [jobs, setJobs] = useState<RawJob[]>([])
   const [loading, setLoading] = useState(true)
+  const [searchInput, setSearchInput] = useState("")
+
+  const [query, setQuery] = useState({
+    search: "",
+    jobTypes: [] as string[],
+    jobCategory: "",
+    companyName: "",
+    sort: "Most Recent",
+  })
+  const [draftTypes, setDraftTypes] = useState<string[]>([])
+  const [draftCategory, setDraftCategory] = useState("")
+  const [draftCompany, setDraftCompany] = useState("")
 
   useEffect(() => {
     let mounted = true
-    getJobs("")
+    setLoading(true)
+
+    const params = new URLSearchParams()
+    if (query.search) params.set("search", query.search)
+    if (query.jobTypes.length) params.set("jobType", query.jobTypes.join(","))
+    if (query.jobCategory) params.set("jobCategory", query.jobCategory)
+    if (query.companyName) params.set("companyName", query.companyName)
+    if (query.sort === "Salary: High to Low") params.set("sort", "salary_desc")
+    if (query.sort === "Salary: Low to High") params.set("sort", "salary_asc")
+    params.set("sort", query.sort)
+
+    getJobs(params.toString())
       .then((data) => {
-        if (mounted) {
-          setJobs(data)
-          setLoading(false)
-        }
+        if (mounted) setJobs(data)
       })
       .catch(() => {
-        if (mounted) {
-          setJobs([])
-          setLoading(false)
-        }
+        if (mounted) setJobs([])
       })
+      .finally(() => {
+        if (mounted) setLoading(false)
+      })
+
     return () => {
       mounted = false
     }
-  }, [])
+  }, [query])
 
-  // Job type counts for the filter sidebar (display only).
   const jobTypeCounts = jobs.reduce<Record<string, number>>((acc, job) => {
     const type = job.jobType
     if (type) acc[type] = (acc[type] ?? 0) + 1
     return acc
   }, {})
 
-  // --------------------------------------------------------------------------
-  // NOTE: All search/filter handlers below are intentionally left empty.
-  // Wire up the actual search/filter logic (e.g. updating the query string
-  // and re-fetching jobs) here. The job list is not re-filtered when these
-  // change, per requirements.
-  // --------------------------------------------------------------------------
-  const noop = () => {
-    // TODO: implement search / filter / apply / pagination
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value)
+  }
+
+  const handleSearch = () => {
+    setQuery((prev) => ({ ...prev, search: searchInput.trim() }))
+  }
+
+  const handleJobType = (value: string) => {
+    setDraftTypes((prev) =>
+      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+    )
+  }
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setDraftCategory(e.target.value)
+  }
+
+  const handleCompanyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDraftCompany(e.target.value)
+  }
+
+  const handleApply = () => {
+    setQuery((prev) => ({
+      ...prev,
+      jobTypes: draftTypes,
+      jobCategory: draftCategory,
+      companyName: draftCompany.trim(),
+    }))
+  }
+
+  const noop = () => {}
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setQuery((prev) => ({ ...prev, sort: e.target.value }))
   }
 
   return (
     <div className="pt-20 pb-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Search Bar */}
         <SearchBar
-          onSearch={noop}
-          onSearchChange={noop}
+          onSearch={handleSearch}
+          onSearchChange={handleSearchChange}
         />
-
-        {/* Results header */}
-        <div className="mt-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="mt-8 flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
           <div>
             <h2 className="text-lg font-semibold text-foreground">
               Found {jobs.length} Professional Jobs
@@ -71,7 +115,7 @@ export default function BrowseJobsPage() {
             </span>
             <select
               defaultValue="Most Recent"
-              onChange={noop}
+              onChange={handleSortChange}
               className="flex h-8 w-[140px] min-w-0 appearance-none items-center justify-between rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30"
             >
               <option value="Most Recent">Most Recent</option>
@@ -80,29 +124,27 @@ export default function BrowseJobsPage() {
             </select>
           </div>
         </div>
-
-        {/* Filters + Jobs grid */}
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <aside className="lg:col-span-3 space-y-6">
+        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <aside className="space-y-6 lg:col-span-3">
             <FilterPanel
-              jobTypes={[]}
-              onJobTypeToggle={noop}
+              jobTypes={draftTypes}
+              onJobTypeToggle={handleJobType}
               jobTypeCounts={jobTypeCounts}
-              jobCategory=""
-              onJobCategoryChange={noop}
-              companyName=""
-              onCompanyNameChange={noop}
-              onApply={noop}
+              jobCategory={draftCategory}
+              onJobCategoryChange={handleCategoryChange}
+              companyName={draftCompany}
+              onCompanyNameChange={handleCompanyChange}
+              onApply={handleApply}
             />
           </aside>
 
-          <div className="lg:col-span-9 space-y-4">
+          <div className="space-y-4 lg:col-span-9">
             {loading ? (
-              <div className="text-center py-12 text-muted-foreground">
+              <div className="py-12 text-center text-muted-foreground">
                 Loading jobs…
               </div>
             ) : jobs.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
+              <div className="py-12 text-center text-muted-foreground">
                 No jobs found matching your criteria.
               </div>
             ) : (
@@ -117,21 +159,19 @@ export default function BrowseJobsPage() {
             )}
           </div>
         </div>
-
-        {/* Pagination */}
         <div className="mt-10 flex items-center justify-center gap-1">
           <button
             type="button"
             disabled
-            className="px-3 py-1.5 rounded-lg border border-input bg-input/50 text-sm text-muted-foreground"
+            className="flex items-center gap-2 rounded-lg border border-input bg-input/50 px-3 py-1.5 text-sm"
             onClick={noop}
           >
-            <MoreHorizontal className="h-4 w-4 mr-1" />
             Prev
+            <FaArrowAltCircleLeft />
           </button>
           <button
             type="button"
-            className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm"
+            className="rounded-lg bg-primary px-3 py-1.5 text-sm text-primary-foreground"
             onClick={noop}
           >
             1
@@ -140,7 +180,7 @@ export default function BrowseJobsPage() {
             <button
               key={n}
               type="button"
-              className="px-3 py-1.5 rounded-lg border border-input bg-input/50 text-sm"
+              className="rounded-lg border border-input bg-input/50 px-3 py-1.5 text-sm"
               onClick={noop}
             >
               {n}
@@ -148,25 +188,18 @@ export default function BrowseJobsPage() {
           ))}
           <button
             type="button"
-            className="px-1.5 py-1.5 rounded-lg border border-input bg-input/50 text-sm"
+            className="rounded-lg border border-input bg-input/50 px-1.5 py-1.5 text-sm"
             onClick={noop}
           >
             …
           </button>
           <button
             type="button"
-            className="px-3 py-1.5 rounded-lg border border-input bg-input/50 text-sm"
-            onClick={noop}
-          >
-            42
-          </button>
-          <button
-            type="button"
-            className="px-3 py-1.5 rounded-lg border border-input bg-input/50 text-sm"
+            className="flex items-center gap-2 rounded-lg border border-input bg-input/50 px-3 py-1.5 text-sm"
             onClick={noop}
           >
             Next
-            <MoreHorizontal className="h-4 w-4 ml-1" />
+            <FaArrowCircleRight />
           </button>
         </div>
       </div>

@@ -3,10 +3,11 @@
 import { Bookmark, DollarSign } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { BsLightningCharge } from "react-icons/bs"
+import { FaRegClock } from "react-icons/fa"
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -21,8 +22,7 @@ export interface JobCardProps {
 
 export function JobCard({ job, onEasyApply, onBookmark }: JobCardProps) {
   const match = Object.entries(categoryStyles).find(
-    ([key, style]) =>
-      key === job.jobCategory || style.label === job.jobCategory
+    ([key, style]) => key === job.jobCategory || style.label === job.jobCategory
   )
   const style = match ? match[1] : categoryStyles.other
   const Icon = style.icon
@@ -30,14 +30,14 @@ export function JobCard({ job, onEasyApply, onBookmark }: JobCardProps) {
   const isRemote = job.remoteAllowed === true
 
   return (
-    <Card className="border border-border/50 hover:border-border transition-colors">
+    <Card className="border border-border/50 transition-colors hover:border-border">
       <CardHeader className="flex flex-row items-center justify-between py-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg {style.className}">
+          <div className="{style.className} flex h-8 w-8 items-center justify-center rounded-lg">
             <Icon className="h-4 w-4" />
           </div>
           <div className="leading-none">
-            <CardTitle className="text-base font-medium leading-none">
+            <CardTitle className="text-base leading-none font-medium">
               {job.jobTitle}
             </CardTitle>
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -51,14 +51,14 @@ export function JobCard({ job, onEasyApply, onBookmark }: JobCardProps) {
         <button
           type="button"
           onClick={onBookmark}
-          className="rounded-md p-1.5 hover:bg-muted transition-colors"
+          className="rounded-md p-1.5 transition-colors hover:bg-muted"
           aria-label="Save job"
         >
           <Bookmark className="h-4 w-4 text-muted-foreground" />
         </button>
       </CardHeader>
       <CardContent className="pb-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-items-start gap-6">
           <div className="flex items-center gap-2 text-sm">
             <DollarSign className="h-3 w-3 text-muted-foreground" />
             <span className="font-medium">
@@ -67,22 +67,22 @@ export function JobCard({ job, onEasyApply, onBookmark }: JobCardProps) {
                 : "Competitive"}
             </span>
           </div>
-          <Badge variant="outline" className="text-xs capitalize">
+          <Badge variant="outline" className="text-sm capitalize">
+            <FaRegClock />
             {job.jobType}
           </Badge>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="gap-2 rounded-lg border-2 border-emerald-800 bg-emerald-950/60 text-emerald-500 transition-colors hover:border-emerald-500 hover:bg-emerald-950 hover:text-emerald-400"
+            onClick={onEasyApply}
+          >
+            <BsLightningCharge />
+            Easy Apply
+          </Button>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button
-          type="button"
-          variant="default"
-          size="sm"
-          className="w-full bg-emerald-500 text-white hover:bg-emerald-600"
-          onClick={onEasyApply}
-        >
-          Easy Apply
-        </Button>
-      </CardFooter>
     </Card>
   )
 }

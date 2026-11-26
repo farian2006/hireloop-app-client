@@ -33,14 +33,12 @@ export function FilterPanel({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-sm font-semibold text-foreground">Filters</h2>
-
-      {/* Job Type */}
-      <div className="space-y-2">
-        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+      <h2 className="text-base font-semibold text-foreground">Filters</h2>
+      <div className="space-y-3">
+        <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
           Job Type
         </span>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="flex flex-wrap gap-2">
           {jobTypeOptions.map((option) => (
             <button
               key={option.value}
@@ -48,10 +46,10 @@ export function FilterPanel({
               onClick={() => onJobTypeToggle(option.value)}
               aria-pressed={isSelected(option.value)}
               className={cn(
-                "flex items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors",
+                "flex items-center gap-2 rounded-xl border px-4 py-3 text-left text-sm font-medium transition-colors",
                 isSelected(option.value)
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "border-input bg-input/50 text-foreground hover:bg-muted"
+                  ? "border-white bg-white text-zinc-900"
+                  : "border-white/10 bg-zinc-900 text-zinc-100 hover:bg-zinc-800"
               )}
             >
               <span>{option.label}</span>
@@ -62,10 +60,8 @@ export function FilterPanel({
           ))}
         </div>
       </div>
-
-      {/* Job Category */}
       <div className="space-y-2">
-        <SelectLabel>Job Category</SelectLabel>
+        <SelectLabel className="flex">Job Category</SelectLabel>
         <Select
           onChange={onJobCategoryChange}
           defaultValue={jobCategory || ""}
@@ -81,10 +77,8 @@ export function FilterPanel({
           </SelectContent>
         </Select>
       </div>
-
-      {/* Company Name */}
       <div className="space-y-2">
-        <SelectLabel>Company Name</SelectLabel>
+        <SelectLabel className="flex">Company Name</SelectLabel>
         <Input
           placeholder="Company name"
           defaultValue={companyName}
