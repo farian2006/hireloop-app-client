@@ -1,6 +1,6 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000"
 
-export async function applyToAJob(data) {
+export async function applyToAJob(data: { jobId: string; userId: string; email: string; jobTitle: string; companyName: string }) {
   const response = await fetch(`${BASE_URL}/applications`, {
     method: "POST",
     headers: {

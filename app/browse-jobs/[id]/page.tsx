@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from "react"
 import { getJobById } from "@/lib/api/jobs"
 import type { RawJob } from "@/lib/types/jobs"
+import type { JobApplication } from "@/lib/types/applications"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -37,12 +38,12 @@ export default function JobDetailsPage({
       router.push(`/auth/sign-in?redirectTo=/browse-jobs/${job?._id}`)
       return
     } else if (user.role === "seeker") {
-      const application = {
-        jobId: job?._id,
+      const application: JobApplication = {
+        jobId: job?._id ?? "",
         userId: user.id,
         email: user.email,
-        jobTitle: job?.jobTitle,
-        companyName: job?.companyName,
+        jobTitle: job?.jobTitle ?? "",
+        companyName: job?.companyName ?? "",
       }
 
       try {
