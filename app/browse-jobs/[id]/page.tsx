@@ -44,6 +44,10 @@ export default function JobDetailsPage({
         email: user.email,
         jobTitle: job?.jobTitle ?? "",
         companyName: job?.companyName ?? "",
+        jobType: job?.jobType ?? "",
+        location: job?.jobLocation ?? "",
+        status: "Applied",
+        appliedAt: new Date().toISOString(),
       }
 
       try {
