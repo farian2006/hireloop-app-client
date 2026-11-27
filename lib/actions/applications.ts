@@ -63,3 +63,10 @@ export const getApplications = async (
     status: app.status ?? "Applied",
   }))
 }
+
+export const getApplicationCount = async (
+  query = ""
+): Promise<{ count: number }> => {
+  const res = await fetch(`${BASE_URL}/applications/count?${query}`)
+  return res.json()
+}

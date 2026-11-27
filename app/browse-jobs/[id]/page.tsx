@@ -16,7 +16,7 @@ import Image from "next/image"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { useSession } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
-import { applyToAJob } from "@/lib/actions/applications"
+import { applyToAJob, getApplicationCount } from "@/lib/actions/applications"
 import { toast } from "sonner"
 
 const noop = () => {}
@@ -38,6 +38,15 @@ export default function JobDetailsPage({
       router.push(`/auth/sign-in?redirectTo=/browse-jobs/${job?._id}`)
       return
     } else if (user.role === "seeker") {
+      const countResult = await getApplicationCount(`applicantId=${user.id}`)
+
+      if (countResult.count >= 10) {
+        toast.success("Sign In Successful", {
+          description: "Welcome To HireLoop",
+        })
+        router.push('/payment');
+        return
+      }
       const application: JobApplication = {
         jobId: job?._id ?? "",
         userId: user.id,
