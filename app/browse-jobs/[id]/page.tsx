@@ -13,6 +13,10 @@ import { MdAttachMoney } from "react-icons/md"
 import { FaRegClock } from "react-icons/fa"
 import Image from "next/image"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { useSession } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
+import { applyToAJob } from "@/lib/actions/applications"
+import { toast } from "sonner"
 
 const noop = () => {}
 
@@ -24,6 +28,43 @@ export default function JobDetailsPage({
   const { id } = use(params)
   const [job, setJob] = useState<RawJob | null>(null)
   const [loading, setLoading] = useState(true)
+
+  const { data: session } = useSession()
+  const user = session?.user
+  const router = useRouter()
+  const handleApplyNow = async () => {
+    if (!user) {
+      router.push(`/auth/sign-in?redirectTo=/browse-jobs/${job?._id}`)
+      return
+    } else if (user.role === "seeker") {
+      const application = {
+        jobId: job?._id,
+        userId: user.id,
+        email: user.email,
+        jobTitle: job?.jobTitle,
+        companyName: job?.companyName,
+      }
+
+      try {
+        const result = await applyToAJob(application)
+        if (result.insertedId) {
+          toast.success("Apply Successful", {
+            description: "",
+          })
+          router.push("/browse-jobs")
+        }
+      } catch (error) {
+        console.error(error)
+        toast.error("Apply Failed", {
+          description: "Something went wrong. Please try again.",
+        })
+      }
+    } else {
+      toast.error("Only Job Seeker Can Apply", {
+        description: "",
+      })
+    }
+  }
 
   useEffect(() => {
     let mounted = true
@@ -84,16 +125,16 @@ export default function JobDetailsPage({
       <div className="mx-auto max-w-7xl px-4 py-8">
         <div className="mt-20 mb-10 flex flex-col justify-between gap-6 border-b border-zinc-800 pb-6 lg:flex-row">
           <div>
-            <div className="flex gap-4 items-center-safe">
-              <Avatar className="h-12 w-12 mb-4">
+            <div className="flex items-center-safe gap-4">
+              <Avatar className="mb-4 h-12 w-12">
                 <AvatarImage src={job.companyName || undefined} />
                 <AvatarFallback>
                   {job.companyName?.charAt(0) || "C"}
                 </AvatarFallback>
               </Avatar>
-            <h1 className="mb-1 text-4xl font-semibold text-foreground">
-              {job.jobTitle}
-            </h1>
+              <h1 className="mb-1 text-4xl font-semibold text-foreground">
+                {job.jobTitle}
+              </h1>
             </div>
             <div className="flex gap-4">
               <p className="text-2xl text-zinc-400">{job.companyName}</p>
@@ -116,7 +157,7 @@ export default function JobDetailsPage({
               type="button"
               size="sm"
               className="flex cursor-pointer rounded-lg border-2 border-white bg-white px-4 font-semibold text-zinc-900 transition-colors hover:border-blue-900 hover:bg-blue-950 hover:text-white lg:flex-none"
-              onClick={noop}
+              onClick={handleApplyNow}
             >
               Apply Now
             </Button>
