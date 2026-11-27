@@ -8,8 +8,7 @@ import { FaRegClock } from "react-icons/fa"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { RawJob } from "@/lib/types/jobs"
 import { categoryStyles } from "@/lib/constants/jobs"
-import { redirect } from "next/navigation"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 
 export interface JobCardProps {
   job: RawJob
@@ -26,9 +25,9 @@ export function JobCard({ job, onEasyApply, onBookmark }: JobCardProps) {
 
   const isRemote = job.remoteAllowed === true
 
-  const router = useRouter();
+  const router = useRouter()
 
-  const handleViewJobDetail = (jobId:string) => {
+  const handleViewJobDetail = (jobId: string) => {
     router.push(`/browse-jobs/${jobId}`)
   }
 

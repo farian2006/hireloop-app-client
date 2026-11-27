@@ -11,3 +11,8 @@ export const getJobs = async (query: string = ""): Promise<RawJob[]> => {
   }
   return res.json()
 }
+
+export const getJobById = async (jobId: string):Promise<RawJob | null> => {
+  const res = await fetch(`${BASE_URL}/jobs/${jobId}`)
+  return await res.json()
+}
