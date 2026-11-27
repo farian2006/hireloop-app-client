@@ -1,4 +1,3 @@
-import { date } from "better-auth"
 import { ApplicationRow, JobApplication } from "../types/applications"
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000"
@@ -55,6 +54,7 @@ export const getApplications = async (
 
   return data.map((app) => ({
     id: app._id ?? "",
+    userId: app.userId ?? "",
     jobTitle: app.jobTitle,
     jobType: app.jobType ?? "",
     location: app.location ?? "",

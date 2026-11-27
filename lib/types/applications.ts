@@ -8,15 +8,16 @@ export interface JobApplication {
   email: string
   jobTitle: string
   companyName: string
-   company?: string
+  company?: string
   status?: ApplicationStatus
-  jobType:string
-  location:string
+  jobType: string
+  location: string
   applied?: string
   appliedAt?: string
 }
 export interface ApplicationRow {
   id: string
+  userId: string
   jobTitle: string
   jobType: string
   location: string

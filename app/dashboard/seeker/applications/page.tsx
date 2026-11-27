@@ -71,7 +71,8 @@ export default function ApplicationsPage() {
 
     getApplications(`userId=${user.id}`)
       .then((data) => {
-        if (mounted) setApplications(data)
+        if (mounted)
+          setApplications(data.filter((app) => app.userId === user.id))
       })
       .catch(() => {
         if (mounted) setApplications([])
