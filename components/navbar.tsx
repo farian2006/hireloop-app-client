@@ -28,7 +28,7 @@ export function Navbar() {
   const navLinks = [
     { label: "Browse Jobs", href: "/browse-jobs" },
     { label: "Company", href: "/company" },
-    { label: "Pricing", href: "/pricing" },
+    { label: "Pricing", href: "/payment" },
     {
       label: "Dashboard",
       href: `/dashboard/${session?.user.role || "seeker"}`,
